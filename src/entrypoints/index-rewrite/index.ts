@@ -542,7 +542,7 @@ async function showUpcomingAsignments() {
                     } else if (assignment.actionAvailable === false) {
                         return 'まだ提出できないかも';
                     } else if (assignment.hasSubmitted === 'improvable') {
-                        return '満点まで再受験';
+                        return '再受験可能';
                     } else if (assignment.hasSubmitted === true) {
                         if (isPartial) {
                             return '<div class="d-inline-block spinner-border spinner-border-sm mr-1" role="status"><span class="sr-only">Loading...</span></div>提出状況を確認中';
@@ -581,7 +581,7 @@ async function showUpcomingAsignments() {
          * @param html HTML文字列
          * @param instanceId インスタンスID（モジュールのID）
          */
-        function determineStatusByHtml(html: string, instanceId: number): boolean | 'unknown' | 'improvable' {
+        function determineStatusByHtml(html: string, instanceId: number): ParsedAssignments['hasSubmitted'] {
             try {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
