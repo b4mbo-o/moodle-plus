@@ -76,7 +76,7 @@ function makeRequestToExtension<
  */
 function isLoggedin() {
     try {
-        return document.getElementsByClassName("usermenu")[0].children[0].className.indexOf("login") === -1;
+        return document.getElementsByClassName("usermenu")[0]?.children[0]?.className.indexOf("login") === -1;
     } catch (e) {
         // 九州大学のログインページ対策
         return false;
@@ -91,7 +91,7 @@ async function changeTitle() {
         if (document.getElementsByClassName("page-header-headings").length === 0) {
             title = document.getElementById("page-header")?.getElementsByTagName("h2")[0];
         } else {
-            title = document.getElementsByClassName("page-header-headings")[0].getElementsByTagName("h1")[0];
+            title = document.getElementsByClassName("page-header-headings")[0]?.getElementsByTagName("h1")[0];
         }
         if (title) {
             title.classList.add('pr-2', 'mb-2');
@@ -140,7 +140,7 @@ function minimizeNewsFeed() {
             title.innerText = "サイトニュース (コンパクト版)";
         }
         const lastlink = newsForumEl.lastElementChild?.lastElementChild as HTMLAnchorElement;
-        const subscribeButton = newsForumEl.getElementsByClassName("subscribelink")[0].children[0] as HTMLAnchorElement;
+        const subscribeButton = newsForumEl.getElementsByClassName("subscribelink")[0]?.children[0] as HTMLAnchorElement;
         subscribeButton.innerText = "長いお知らせ達を読む";
         subscribeButton.href = lastlink.href;
         const articles = newsForumEl.querySelectorAll("article.forum-post-container") as NodeListOf<HTMLDivElement>;
@@ -340,6 +340,7 @@ async function showUpcomingAsignments() {
             const errorEl = document.getElementById("moodle_plus_upcoming_assignments_fetch_error");
             if (!errorEl) return;
             const errorElText = errorEl.getElementsByTagName("span")[0];
+            if (!errorElText) return;
 
             const reloadButton = document.createElement("a");
             reloadButton.href = "#";
@@ -444,7 +445,7 @@ async function showUpcomingAsignments() {
 
                 if (event.eventtype === 'open') {
                     const existingEventIndex = acc.findIndex((e) => e.instanceId === event.instance);
-                    if (existingEventIndex !== -1) {
+                    if (existingEventIndex !== -1 && acc[existingEventIndex] != null) {
                         acc[existingEventIndex] = {
                             ...acc[existingEventIndex],
                             startDate: event.timestart * 1000,
@@ -465,7 +466,7 @@ async function showUpcomingAsignments() {
                     }
                 } else {
                     const existingEventIndex = acc.findIndex((e) => e.instanceId === event.instance);
-                    if (existingEventIndex !== -1) {
+                    if (existingEventIndex !== -1 && acc[existingEventIndex] != null) {
                         acc[existingEventIndex] = {
                             ...acc[existingEventIndex],
                             dueDate: (event.timestart + event.timeduration) * 1000,
@@ -615,9 +616,9 @@ async function showUpcomingAsignments() {
             // 再受験ボタンがない場合（受験回数の上限に達した場合など）は対象外
             if (doc.querySelector('.quizstartbuttondiv [type="submit"]') == null) return false;
             const match = doc.getElementById('feedback')?.textContent?.match(/最高評点\s*:\s*([\d,.]+)\s*\/\s*([\d,.]+)/);
-            if (!match) return false;
-            const best = parseFloat(match[1].replace(/,/g, ''));
-            const max = parseFloat(match[2].replace(/,/g, ''));
+            if (!match || match.length < 3) return false;
+            const best = parseFloat(match[1]!.replace(/,/g, ''));
+            const max = parseFloat(match[2]!.replace(/,/g, ''));
             if (Number.isNaN(best) || Number.isNaN(max)) return false;
             return best < max;
         }
